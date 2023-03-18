@@ -29,6 +29,7 @@ type Params = {
   id: string;
   img: string;
   vote_average: string;
+  totalvote: number;
 };
 
 const MovieDetails = () => {
@@ -40,7 +41,7 @@ const MovieDetails = () => {
   const {movieLikes} = useSelector((state: RootState) => state);
   const dispatch = useDispatch();
 
-  const {title, img, id, onLike, vote_average}: Params = route.params;
+  const {title, img, id, onLike, vote_average,totalvote}: Params = route.params;
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [page, setPages] = useState(1);
@@ -111,6 +112,9 @@ const MovieDetails = () => {
     ? totalResults + myCommentCount
     : 0 + myCommentCount;
 
+  const likedValue = liked ? 1 : 0;
+  const voteCount = totalvote ? totalvote + likedValue : likedValue;  
+
   return (
     <View style={{flex: 1}}>
       <Image
@@ -133,6 +137,7 @@ const MovieDetails = () => {
             }
             size={32}
           />
+          <Text>{voteCount} Likes</Text>
         </Pressable>
         <View
           style={{

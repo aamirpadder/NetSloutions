@@ -44,9 +44,6 @@ export const MoviesFeeds = () => {
       .then(res => {
         console.log('res.data', res);
         const {page: resPage, total_pages, results} = res.data || {};
-        // setTotalpages(page);
-        // setPages(total_pages);
-        // setData(results);
         loadMore(
           data,
           results,
@@ -56,7 +53,6 @@ export const MoviesFeeds = () => {
           setData,
           setTotalpages,
         );
-        // dispatch(setdata(res.data.data));
       })
       .catch(err => {
         console.log('err', err);
@@ -71,8 +67,10 @@ export const MoviesFeeds = () => {
   }, []);
 
   const renderItem = ({item}: {item: any}) => {
-    const {title, poster_path, vote_average, id} = item || {};
+    const {title, poster_path, vote_average, id, vote_count} = item || {};
     const {liked} = movieLikes.data.find(item => item.id === id) || {};
+    const likedValue = liked ? 1 : 0;
+    const totalvote = vote_count ? vote_count + likedValue : likedValue;
     return (
       <ListItem
         title={title}
@@ -84,12 +82,14 @@ export const MoviesFeeds = () => {
             title,
             id,
             vote_average,
+            totalvote
           });
         }}
         liked={liked}
         onLike={() => {
           dispatch(setdata({id, value: !liked}));
         }}
+        totalvote={totalvote}
       />
     );
   };

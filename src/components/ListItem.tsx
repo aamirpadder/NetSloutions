@@ -21,10 +21,11 @@ type Props = {
   vote_average: string;
   onLike: () => void;
   liked: boolean;
+  totalvote: number;
 };
 
 export const ListItem = (props: Props) => {
-  const {title, onPress, image, vote_average, onLike, liked} = props || {};
+  const {title, onPress, image, vote_average, onLike, liked,totalvote } = props || {};
   return (
     // <Card>
     <View style={style.container}>
@@ -47,6 +48,7 @@ export const ListItem = (props: Props) => {
                     : require('../assets/icons/heart.png')
                 }
               />
+              <Text>{totalvote} Likes</Text>
             </Pressable>
             <Pressable onPress={onPress}>
               <Image
@@ -123,7 +125,7 @@ const style = StyleSheet.create({
   tilteView: {
     // flexWrap: 'wrap',
     marginBottom: 10,
-    height: perfectSize(70),
+    // height: perfectSize(70),
     // backgroundColor: colors.blackLight,
     backgroundColor: colors.WHITE_COLOR,
     shadowOpacity: 0.2,
