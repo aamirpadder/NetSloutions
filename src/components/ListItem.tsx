@@ -48,7 +48,7 @@ export const ListItem = (props: Props) => {
                     : require('../assets/icons/heart.png')
                 }
               />
-              <Text>{totalvote} Likes</Text>
+              <Text style={{color:'black'}}>{totalvote} Likes</Text>
             </Pressable>
             <Pressable onPress={onPress}>
               <Image

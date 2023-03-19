@@ -21,7 +21,7 @@ import {setComments, setdata} from '../../store/slices/dataSlice';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../store';
 import {CommentBox} from '../../components/CommentBox';
-import { loadMore } from '../../utils/utility';
+import {loadMore} from '../../utils/utility';
 
 type Params = {
   title: string;
@@ -41,7 +41,8 @@ const MovieDetails = () => {
   const {movieLikes} = useSelector((state: RootState) => state);
   const dispatch = useDispatch();
 
-  const {title, img, id, onLike, vote_average,totalvote}: Params = route.params;
+  const {title, img, id, onLike, vote_average, totalvote}: Params =
+    route.params;
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [page, setPages] = useState(1);
@@ -56,7 +57,12 @@ const MovieDetails = () => {
       .get(movieReview(id, `page=${page}`))
       .then(res => {
         console.log('res.data', res);
-        const {page:resPage, total_pages, results, total_results} = res.data || {};
+        const {
+          page: resPage,
+          total_pages,
+          results,
+          total_results,
+        } = res.data || {};
         setTotalresults(total_results);
         loadMore(
           data,
@@ -107,13 +113,14 @@ const MovieDetails = () => {
   const {liked} = movieLikes.data.find(item => item.id === id) || {};
   const {comment = ''} =
     movieLikes.commetsData?.find(item => item.id === id) || {};
+
   const myCommentCount = comment ? 1 : 0;
   const totalComments = totalResults
     ? totalResults + myCommentCount
     : 0 + myCommentCount;
 
   const likedValue = liked ? 1 : 0;
-  const voteCount = totalvote ? totalvote + likedValue : likedValue;  
+  const voteCount = totalvote ? totalvote + likedValue : likedValue;
 
   return (
     <View style={{flex: 1}}>
@@ -137,7 +144,7 @@ const MovieDetails = () => {
             }
             size={32}
           />
-          <Text>{voteCount} Likes</Text>
+          <Text style={{color: colors.APP_COLOR}}>{voteCount} Likes</Text>
         </Pressable>
         <View
           style={{
@@ -146,13 +153,12 @@ const MovieDetails = () => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-  
           <Avatar
             noShadow={true}
             source={require('../../assets/icons/star.png')}
             size={20}
           />
-          <Text style={{color: colors.APP_COLOR}}> {' '} {vote_average}</Text>
+          <Text style={{color: colors.APP_COLOR}}> {vote_average}</Text>
         </View>
       </View>
       <SectionHeader title={`(${totalComments}) Comments`} />
@@ -172,11 +178,11 @@ const MovieDetails = () => {
         onEndReached={({distanceFromEnd}) => {
           if (distanceFromEnd > 0) {
             // Alert.alert('jjjj')
-                      fetchData();
+            fetchData();
           }
         }}
         onEndReachedThreshold={0.5}
-        ListEmptyComponent={isLoading ? null : <EmptyComponet />}
+        ListEmptyComponent={isLoading || comment? null : <EmptyComponet />}
         renderItem={renderItem}
         keyExtractor={item => item?.id?.toString()}
       />

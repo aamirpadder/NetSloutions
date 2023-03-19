@@ -13,10 +13,11 @@ export const perfectSize = create(designResolution);
 export const setLocalData = (
   id: string,
   data: Array<Data | commentsData>,
-  value: boolean,
+  value: boolean | string,
   fildType: string,
 ) => {
-  const filterData: any = [...data];
+  const copyData = data ?? [];
+  const filterData: any = [...copyData];
 
   const indexOfItem = filterData.findIndex(
     (item: {id: string}) => item?.id === id,
@@ -43,12 +44,15 @@ export const loadMore = (
   setData: Function,
   setTotalPage: Function,
 ) => {
-  if (pages <= totalPage && responseData.length) {
-    setData([...data, ...responseData]);
+  if (pages <= totalPage && responseData?.length && data?.length) {
+    const removeDeuplicate = [...data, ...responseData].filter(
+      (item, index, arr) => arr.indexOf(item) === index,
+    );
+    setData(removeDeuplicate);
     setPage(pages + 1);
     setTotalPage(totalPage);
   } else {
-    if (responseData.length) {
+    if (responseData?.length) {
       setData(responseData);
       setPage(pages + 1);
       setTotalPage(totalPage);

@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {View, FlatList, RefreshControl} from 'react-native';
+import {View, FlatList, RefreshControl, ActivityIndicator} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {EmptyComponet} from '../../components/EmptyComponets';
 import {ListItem} from '../../components/ListItem';
@@ -17,6 +17,7 @@ export const MoviesFeeds = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [page, setPages] = useState(1);
   const [data, setData] = useState([]);
+  const [isLoadMore, setLoadMore] = useState(false);
 
   const [totalPages, setTotalpages] = useState(0);
 
@@ -38,7 +39,6 @@ export const MoviesFeeds = () => {
   }, []);
 
   const fetchData = () => {
-    setIsLoading(true);
     return networkmethods
       .get(movieDiscover(`page=${page}`))
       .then(res => {
@@ -56,14 +56,14 @@ export const MoviesFeeds = () => {
       })
       .catch(err => {
         console.log('err', err);
-      })
-      .finally(() => {
-        setIsLoading(false);
       });
   };
 
   useEffect(() => {
-    fetchData();
+    setIsLoading(true);
+    fetchData().finally(() => {
+      setIsLoading(false);
+    });
   }, []);
 
   const renderItem = ({item}: {item: any}) => {
@@ -82,7 +82,7 @@ export const MoviesFeeds = () => {
             title,
             id,
             vote_average,
-            totalvote
+            totalvote: vote_count,
           });
         }}
         liked={liked}
@@ -94,7 +94,10 @@ export const MoviesFeeds = () => {
     );
   };
   const onEndReached = () => {
-    fetchData();
+    setLoadMore(true);
+    fetchData().finally(() => {
+      setLoadMore(false);
+    });
   };
   return (
     <View style={styles.container}>
@@ -105,6 +108,13 @@ export const MoviesFeeds = () => {
         ListEmptyComponent={isLoading ? null : <EmptyComponet />}
         data={data}
         refreshing={refreshing}
+        ListFooterComponent={
+          <ActivityIndicator
+            hidesWhenStopped={isLoadMore}
+            color={colors.WHITE_COLOR}
+            size="small"
+          />
+        }
         refreshControl={
           <RefreshControl
             tintColor={colors.WHITE_COLOR}
@@ -116,8 +126,13 @@ export const MoviesFeeds = () => {
         initialNumToRender={9}
         renderItem={renderItem}
         keyExtractor={item => `${item?.id}`}
-        onEndReached={onEndReached}
-        onEndReachedThreshold={0.3}
+        onEndReached={({distanceFromEnd}) => {
+          if (distanceFromEnd > 0) {
+            // Alert.alert('jjjj')
+            onEndReached();
+          }
+        }}
+        onEndReachedThreshold={0.5}
       />
     </View>
   );
