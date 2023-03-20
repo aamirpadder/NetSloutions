@@ -1,6 +1,6 @@
 module.exports = {
   //   preset: 'react-native',
-  "preset": "react-native",
+  preset: 'react-native',
   // setupFiles: ['<rootDir>/jest.setup.js'],
 
   testMatch: ['**/?(*.)+(spec|test).(js|ts|tsx)'],
@@ -8,7 +8,8 @@ module.exports = {
     'node_modules/(?!(jest-)?react-native|@react-navigation|@react-native/.*|react-navigation|react-native-webview|react-redux|@react-native-community/async-storage)',
   ],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
-  // testPathIgnorePatterns: ['<rootDir>/node_modules/']
+  testPathIgnorePatterns: ['<rootDir>/node_modules/'],
   // modulePaths: ['<rootDir>'],
   // verbose: true,
+  coverageReporters: ['text-summary', 'html'],
 };

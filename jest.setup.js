@@ -1,8 +1,5 @@
 import mockAsyncStorage from '@react-native-async-storage/async-storage/jest/async-storage-mock';
 // import 'react-native-gesture-handler/jestSetup';
-import axios from 'axios';
-
-jest.mock('axios');
 
 jest.autoMockOn();
 jest.mock('react-native-pixel-perfect', () => ({
@@ -23,27 +20,27 @@ jest.doMock('react-native', () => ({
   },
 }));
 
-// jest.doMock('axios', () => ({
-//   get: jest.fn(url => {
-//     if (url === '/something') {
-//       return Promise.resolve({
-//         data: 'data',
-//       });
-//     }
-//   }),
-//   post: jest.fn(url => {
-//     if (url === '/something') {
-//       return Promise.resolve({
-//         data: 'data',
-//       });
-//     }
-//     if (url === '/something2') {
-//       return Promise.resolve({
-//         data: 'data2',
-//       });
-//     }
-//   }),
-//   create: jest.fn(function () {
-//     return this;
-//   }),
-// }));
+jest.doMock('axios', () => ({
+  get: jest.fn(url => {
+    if (url === '/something') {
+      return Promise.resolve({
+        data: 'data',
+      });
+    }
+  }),
+  post: jest.fn(url => {
+    if (url === '/something') {
+      return Promise.resolve({
+        data: 'data',
+      });
+    }
+    if (url === '/something2') {
+      return Promise.resolve({
+        data: 'data2',
+      });
+    }
+  }),
+  create: jest.fn(function () {
+    return this;
+  }),
+}));
